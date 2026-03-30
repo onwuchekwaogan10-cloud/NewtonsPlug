@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A registered user of NewtonsPlug.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "referralCode": { "type": "string" },
+        "referredBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "A user's active or expired subscription plan.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Reference to User UID" },
+        "plan": { "type": "string", "enum": ["Starter", "Pro", "Creator"] },
+        "status": { "type": "string", "enum": ["Active", "Expired", "Suspended"] },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "devicesTotal": { "type": "number" },
+        "devicesActive": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "plan", "status", "expiresAt", "devicesTotal", "devicesActive", "createdAt"]
+    },
+    "Session": {
+      "title": "Session",
+      "description": "An active device session for a user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "deviceId": { "type": "string" },
+        "ipAddress": { "type": "string" },
+        "city": { "type": "string" },
+        "lastActive": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "deviceId", "lastActive", "createdAt"]
+    },
+    "Waitlist": {
+      "title": "Waitlist",
+      "description": "A user waiting for a slot in a plan.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "plan": { "type": "string", "enum": ["Starter", "Pro", "Creator"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone", "email", "plan", "createdAt"]
+    },
+    "Tool": {
+      "title": "Tool",
+      "description": "An AI tool offered on the platform.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "type": "string", "enum": ["operational", "maintenance"] },
+        "lastUpdated": { "type": "string" },
+        "note": { "type": "string" }
+      },
+      "required": ["name", "status"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles and roles."
+    },
+    "subscriptions/{subId}": {
+      "schema": { "$ref": "#/entities/Subscription" },
+      "description": "Stores user subscriptions."
+    },
+    "sessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/Session" },
+      "description": "Stores active device sessions."
+    },
+    "waitlist/{waitlistId}": {
+      "schema": { "$ref": "#/entities/Waitlist" },
+      "description": "Stores waitlist entries."
+    },
+    "tools/{toolId}": {
+      "schema": { "$ref": "#/entities/Tool" },
+      "description": "Stores the status of AI tools."
+    }
+  }
+}
